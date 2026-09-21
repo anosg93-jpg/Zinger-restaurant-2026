@@ -1,0 +1,27 @@
+{
+  "name": "مطعم ZINGER",
+  "short_name": "ZINGER",
+  "description": "منيو وطلبات مطعم ZINGER الرسمي - أسرع توصيل وأشهى الوجبات",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#141210",
+  "theme_color": "#91121d",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "images/logoz.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/logoz.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
