@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zinger-cache-v1';
+const CACHE_NAME = 'zinger-cache-v2';
 
 // الملفات الأساسية لتشغيل التطبيق أوفلاين وفورياً
 const STATIC_ASSETS = [

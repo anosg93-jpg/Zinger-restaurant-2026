@@ -135,7 +135,7 @@
         }
         .badge.show { transform: scale(1); }
 
-        /* شريط تصفح الأقسام الأفقي المحسن */
+        /* شريط تصفح الأقسام الأفقي */
         .category-nav { 
             display: flex; overflow-x: auto; white-space: nowrap; 
             padding: 16px 14px; gap: 20px; scrollbar-width: none; 
@@ -162,7 +162,7 @@
         .cat-item.active span { color: var(--accent); font-weight: 900; }
         .menu-list { padding: 18px 15px; max-width: 600px; margin: auto; }
         
-        /* الكروت بتنسيقها الجديد - الوصف بالكامل أسفل الكارت */
+        /* الكروت */
         .food-card { 
             background: var(--white); 
             border-radius: 22px; 
@@ -277,7 +277,7 @@
         .order-btn:hover { background: var(--accent-hover); }
         .order-btn.added { background: #1f5e27; color: white; box-shadow: 0 4px 10px rgba(31, 94, 39, 0.3); }
 
-        /* شريط الوصف الإبداعي الصغير أسفل الكارت بالكامل */
+        /* شريط الوصف أسفل الكارت */
         .card-full-desc {
             background: var(--tag-bg);
             color: var(--desc-text);
@@ -295,6 +295,43 @@
             content: "✨";
             font-size: 0.8rem;
             flex-shrink: 0;
+        }
+
+        /* حقل الملاحظات الكريتيف أسفل كل كارت */
+        .item-notes-wrapper {
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .item-notes-input {
+            width: 100%;
+            background: var(--bg);
+            border: 1px dashed var(--gold);
+            border-radius: 12px;
+            padding: 7px 34px 7px 12px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: var(--main-text);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .item-notes-input:focus {
+            border: 1px solid var(--accent);
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(145, 18, 29, 0.12);
+        }
+        .item-notes-input::placeholder {
+            color: var(--desc-text);
+            opacity: 0.85;
+            font-size: 0.73rem;
+        }
+        .item-notes-icon {
+            position: absolute;
+            right: 10px;
+            font-size: 0.85rem;
+            pointer-events: none;
+            opacity: 0.8;
         }
 
         .fly-item { position: fixed; z-index: 9999; pointer-events: none; width: 30px; height: 30px; background: var(--gold); color: #1a150e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1); }
@@ -317,7 +354,7 @@
         .ios-content p { font-size: 0.9rem; margin-bottom: 15px; font-weight: 600; line-height: 1.5; }
         .ios-close { background: var(--accent); color: white; border: none; padding: 7px 22px; border-radius: 10px; cursor: pointer; font-weight: 700; }
 
-        /* --- Footer (الأفرع وأرقام التواصل بأسفل الصفحة بالكامل) --- */
+        /* --- Footer --- */
         .restaurant-footer { 
             padding: 35px 20px 25px 20px; 
             text-align: center; 
@@ -365,6 +402,7 @@
         .cart-item-info { flex: 1; }
         .cart-item-name { font-weight: 700; font-size: 0.9rem; color: var(--main-text); }
         .cart-item-price { color: var(--gold-dark); font-weight: 800; font-size: 0.88rem; display: block; }
+        .cart-item-note-pill { font-size: 0.72rem; color: var(--accent); font-weight: 700; display: block; margin-top: 2px; }
         .remove-btn { color: #d32f2f; font-weight: 800; font-size: 0.78rem; cursor: pointer; }
 
         .order-type-container { display: flex; background: var(--tag-bg); padding: 6px; border-radius: 16px; margin: 15px 0; gap: 6px; border: 1px solid var(--card-border); }
@@ -396,7 +434,6 @@
                 <div class="header-logo-container">
                     <img src="images/logoz.png" class="header-logo" onerror="this.src='images/default.jpg'">
                 </div>
-                <!-- اسم المطعم مباشرة أسفل اللوجو في الصفحة الرئيسية -->
                 <div class="restaurant-brand-name">ZINGER RESTAURANT</div>
                 <div class="restaurant-brand-tagline">طعم لا يُقاوم وخدمة ملكية ✨</div>
             </div>
@@ -427,7 +464,7 @@
         </div>
     </div>
 
-    <!-- الفروع ومعلومات التواصل في أسفل الموقع بالكامل -->
+    <!-- الفروع وأرقام التواصل بأسفل الصفحة بالكامل -->
     <footer class="restaurant-footer">
         <div class="footer-branches-container">
             <div class="footer-branch-item">
@@ -696,7 +733,7 @@
                 const data = await response.text();
                 const rows = data.split('\n').slice(1);
                 
-                menuData = rows.map(row => {
+                menuData = rows.map((row, rIdx) => {
                     if (!row.trim()) return null;
                     const col = parseCSVLine(row);
                     
@@ -714,6 +751,7 @@
                     const parsedSizes = resolveItemSizes(category, name, rawPrices);
 
                     return { 
+                        id: 'item_' + rIdx,
                         category: category, 
                         name: name, 
                         desc: desc,
@@ -772,7 +810,7 @@
                 }
 
                 return `
-                <div class="food-card" data-category="${item.category}" data-size="${defaultLabel}" data-price="${defaultPrice}">
+                <div class="food-card" id="${item.id}" data-category="${item.category}" data-size="${defaultLabel}" data-price="${defaultPrice}">
                     <div class="food-card-top">
                         <div class="item-img-box">
                             <img src="${item.img}" onerror="this.src='${IMAGES_PATH}default.jpg'">
@@ -791,6 +829,12 @@
                         </div>
                     </div>
                     ${item.desc ? `<div class="card-full-desc">${item.desc}</div>` : ''}
+                    
+                    <!-- جزء الملاحظات بنظام مستطيل كريتيف أسفل الكارت -->
+                    <div class="item-notes-wrapper">
+                        <span class="item-notes-icon">✍️</span>
+                        <input type="text" class="item-notes-input" placeholder="ملاحظاتك الخاصة للصنف (بدون بصل، سبايسي زيادة...)">
+                    </div>
                 </div>`;
             }).join('');
         }
@@ -812,9 +856,16 @@
             const price = card.dataset.price; 
             const category = card.dataset.category || '';
             
-            let finalName = (size && size.trim() !== '') ? `${name} (${size})` : name; 
-            cart.push({name: finalName, price: price, img: img, category: category});
+            // قراءة الملاحظات الخاصة بالصنف من المستطيل أسفل الكارت
+            const noteInput = card.querySelector('.item-notes-input');
+            const note = noteInput ? noteInput.value.trim() : '';
             
+            let finalName = (size && size.trim() !== '') ? `${name} (${size})` : name; 
+            cart.push({name: finalName, price: price, img: img, category: category, note: note});
+            
+            // تفريغ حقل الملاحظة بعد الطلب بنجاح
+            if(noteInput) noteInput.value = '';
+
             btn.innerText = 'تم الطلب'; 
             btn.classList.add('added');
             setTimeout(() => { btn.innerText = 'اطلب'; btn.classList.remove('added'); }, 2000);
@@ -858,6 +909,7 @@
                     <div class="cart-item-info">
                         <span class="cart-item-name">${item.name}</span>
                         <span class="cart-item-price">${item.price} ج.م</span>
+                        ${item.note ? `<span class="cart-item-note-pill">📝 ملاحظة: ${item.note}</span>` : ''}
                     </div>
                     <span class="remove-btn" onclick="removeFromCart(${idx})">حذف</span>
                 </div>`;
@@ -931,7 +983,13 @@
             
             msg += `\n*الطلبات:* \n`;
             msg += `-------------------------\n`;
-            msg += cart.map((i, index) => `${index + 1}. ${i.name} [قسم: ${i.category}] - (${i.price} ج.م)`).join('\n') + `\n`;
+            msg += cart.map((i, index) => {
+                let line = `${index + 1}. ${i.name} [قسم: ${i.category}] - (${i.price} ج.م)`;
+                if (i.note) {
+                    line += `\n   ✍️ *ملاحظة:* ${i.note}`;
+                }
+                return line;
+            }).join('\n') + `\n`;
             msg += `-------------------------\n\n`;
             msg += `💰 *الإجمالي النهائي:* *${currentTotal} ج.م*\n\n`;
             msg += `نأمل أن تنال خدمتنا رضاكم دائماً. ✨`;
