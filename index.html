@@ -830,7 +830,6 @@
                     </div>
                     ${item.desc ? `<div class="card-full-desc">${item.desc}</div>` : ''}
                     
-                    <!-- جزء الملاحظات بنظام مستطيل كريتيف أسفل الكارت -->
                     <div class="item-notes-wrapper">
                         <span class="item-notes-icon">✍️</span>
                         <input type="text" class="item-notes-input" placeholder="ملاحظاتك الخاصة للصنف (بدون بصل، سبايسي زيادة...)">
@@ -856,14 +855,12 @@
             const price = card.dataset.price; 
             const category = card.dataset.category || '';
             
-            // قراءة الملاحظات الخاصة بالصنف من المستطيل أسفل الكارت
             const noteInput = card.querySelector('.item-notes-input');
             const note = noteInput ? noteInput.value.trim() : '';
             
             let finalName = (size && size.trim() !== '') ? `${name} (${size})` : name; 
             cart.push({name: finalName, price: price, img: img, category: category, note: note});
             
-            // تفريغ حقل الملاحظة بعد الطلب بنجاح
             if(noteInput) noteInput.value = '';
 
             btn.innerText = 'تم الطلب'; 
@@ -983,13 +980,16 @@
             
             msg += `\n*الطلبات:* \n`;
             msg += `-------------------------\n`;
-            msg += cart.map((i, index) => {
-                let line = `${index + 1}. ${i.name} [قسم: ${i.category}] - (${i.price} ج.م)`;
+            
+            // تم التعديل هنا: استخدام شرطة (-) لجميع الأصناف بدون ترقيم عددي
+            msg += cart.map((i) => {
+                let line = `- ${i.name} [قسم: ${i.category}] - (${i.price} ج.م)`;
                 if (i.note) {
                     line += `\n   ✍️ *ملاحظة:* ${i.note}`;
                 }
                 return line;
             }).join('\n') + `\n`;
+            
             msg += `-------------------------\n\n`;
             msg += `💰 *الإجمالي النهائي:* *${currentTotal} ج.م*\n\n`;
             msg += `نأمل أن تنال خدمتنا رضاكم دائماً. ✨`;
